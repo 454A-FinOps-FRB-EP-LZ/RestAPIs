@@ -48,5 +48,5 @@ def stress_memory():
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load', 'memory_allocated': len(memory_hog)}), 200
 
 # Running the API
-
+# change host for public addr?
 api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
