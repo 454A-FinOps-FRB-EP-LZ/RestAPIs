@@ -49,4 +49,4 @@ def stress_memory():
 
 # Running the API
 # change host for public addr?
-api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 80)))
