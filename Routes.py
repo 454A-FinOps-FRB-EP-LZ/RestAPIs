@@ -26,7 +26,7 @@ def cpu_stress(percentage):
 @api.route('/stress/cpu', methods=['GET'])
 def stress_cpu():
     # make smaller
-    cpu_load_percentage = random.choice([25, 50, 75])
+    cpu_load_percentage = random.choice([5, 10, 15, 20])
     processes = []
     for _ in range(multiprocessing.cpu_count()):
         process = multiprocessing.Process(target=cpu_stress, args=(cpu_load_percentage,))
@@ -41,7 +41,7 @@ def stress_memory():
     # Getting the total memory in bytes
     total_memory = os.sysconf('SC_PAGE_SIZE')*os.sysconf('SC_PHYS_PAGES')
     # make smaller
-    memory_load_percentage = random.choice([25, 50, 75])
+    memory_load_percentage = random.choice([5, 10, 15, 20])
     memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
     try:
         memory_hog = bytearray(memory_to_allocate)
