@@ -25,11 +25,10 @@ def cpu_stress(percentage):
  
 def memory_stress(percentage, memory_hog):
     start_time = time.time()
-    while True:
-        if time.time()-start_time > percentage/100.0:
-            memory_hog.append(0)
-            time.sleep(1-(percentage/100.0))
-            start_time = time.time()
+    while time.time()-start_time > percentage/100.0:
+        memory_hog.append(0)
+        time.sleep(1-(percentage/100.0))
+        start_time = time.time()
 
 # GET request for creating a CPU load at 5%, 10%, 15 or 20%
 
