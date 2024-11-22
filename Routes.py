@@ -21,7 +21,17 @@ def cpu_stress(percentage):
             time.sleep(1-(percentage/100.0))
             start_time = time.time()
 
-# GET request for creating a CPU load at 25%, 50% or 75%
+# Function for creating a memory load at the percentage passed as a parameter
+ 
+def memory_stress(percentage, memory_hog):
+    start_time = time.time()
+    while True:
+        if time.time()-start_time > percentage/100.0:
+            memory_hog.append(0)
+            time.sleep(1-(percentage/100.0))
+            start_time = time.time()
+
+# GET request for creating a CPU load at 5%, 10%, 15 or 20%
 
 @api.route('/stress/cpu', methods=['GET'])
 def stress_cpu():
@@ -34,7 +44,7 @@ def stress_cpu():
         process.start()
     return jsonify({'status': f'CPU stress test started at {cpu_load_percentage}% load'}), 200
 
-# GET request for creating a memory load at 25%, 50% or 75%
+# GET request for creating a memory load at 5%, 10%, 15% or 20%
 
 @api.route('/stress/memory', methods=['GET'])
 def stress_memory():
@@ -42,9 +52,11 @@ def stress_memory():
     total_memory = os.sysconf('SC_PAGE_SIZE')*os.sysconf('SC_PHYS_PAGES')
     # make smaller
     memory_load_percentage = random.choice([5, 10, 15, 20])
-    memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
+    # memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
     try:
-        memory_hog = bytearray(memory_to_allocate)
+        # memory_hog = bytearray(memory_to_allocate)
+        memory_hog = bytearray()
+        memory_stress(memory_load_percentage, memory_hog)
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load', 'memory_allocated': len(memory_hog)}), 200
