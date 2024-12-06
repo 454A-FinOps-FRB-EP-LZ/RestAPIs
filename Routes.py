@@ -34,7 +34,6 @@ def memory_stress(percentage, memory_hog):
 
 @api.route('/stress/cpu', methods=['GET'])
 def stress_cpu():
-    # make smaller
     cpu_load_percentage = random.choice([5, 10, 15, 20])
     processes = []
     for _ in range(multiprocessing.cpu_count()):
@@ -49,13 +48,10 @@ def stress_cpu():
 def stress_memory():
     # Getting the total memory in bytes
     total_memory = os.sysconf('SC_PAGE_SIZE')*os.sysconf('SC_PHYS_PAGES')
-    # make smaller
     memory_load_percentage = random.choice([5, 10, 15, 20])
-    # memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
+    memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
     try:
-        # memory_hog = bytearray(memory_to_allocate)
-        memory_hog = bytearray()
-        memory_stress(memory_load_percentage, memory_hog)
+        memory_hog = bytearray(memory_to_allocate)
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load', 'memory_allocated': len(memory_hog)}), 200
