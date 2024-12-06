@@ -56,7 +56,7 @@ def stress_memory():
         memory_hog = None
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
-    return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load', 'memory_allocated': len(memory_hog)}), 200
+    return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load'}), 200
 
 # Running the API
 # change host for public addr?
