@@ -52,6 +52,8 @@ def stress_memory():
     memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
     try:
         memory_hog = bytearray(memory_to_allocate)
+        time.sleep(3)
+        memory_hog = None
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load', 'memory_allocated': len(memory_hog)}), 200
