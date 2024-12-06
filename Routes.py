@@ -53,11 +53,11 @@ def stress_memory():
     try:
         memory_hog = bytearray(memory_to_allocate)
         time.sleep(3)
-        memory_hog = None
+        del memory_hog
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load'}), 200
 
 # Running the API
-# change host for public addr?
+
 api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 80)))
