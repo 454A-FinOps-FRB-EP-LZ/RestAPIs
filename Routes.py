@@ -7,6 +7,8 @@ import multiprocessing
 import os
 import random
 import time
+import psutil
+import threading
 
 # Defining the API
 
@@ -21,14 +23,32 @@ def cpu_stress(percentage):
             time.sleep(1-(percentage/100.0))
             start_time = time.time()
 
-# Function for creating a memory load at the percentage passed as a parameter
- 
-def memory_stress(percentage, memory_hog):
-    start_time = time.time()
-    while time.time()-start_time > percentage/100.0:
-        memory_hog.append(0)
-        time.sleep(1-(percentage/100.0))
-        start_time = time.time()
+# Global variable for storing a memory load
+
+memory_hog = None
+
+# Thread lock for making thread-safe memory functions
+
+lock = threading.Lock()
+
+# Function for allocating memory loads
+
+def memory_allocate(percentage):
+    global memory_hog
+    with lock:
+        total_memory = psutil.virtual_memory().total
+        memory_to_allocate = int(total_memory*percentage/100.0)
+        try:
+            memory_hog = bytearray(memory_to_allocate)
+        except MemoryError:
+            raise MemoryError('Memory limit reached')
+
+# Function for freeing memory loads
+
+def memory_free():
+    global memory_hog
+    with lock:
+        memory_hog = None
 
 # GET request for creating a CPU load at 5%, 10%, 15 or 20%
 
@@ -46,14 +66,11 @@ def stress_cpu():
 
 @api.route('/stress/memory', methods=['GET'])
 def stress_memory():
-    # Getting the total memory in bytes
-    total_memory = os.sysconf('SC_PAGE_SIZE')*os.sysconf('SC_PHYS_PAGES')
     memory_load_percentage = random.choice([5, 10, 15, 20])
-    memory_to_allocate = int(total_memory*memory_load_percentage/100.0)
     try:
-        memory_hog = bytearray(memory_to_allocate)
-        time.sleep(3)
-        del memory_hog
+        memory_allocate(memory_load_percentage)
+        timer = threading.Timer(3.0, memory_free)
+        timer.start()
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load'}), 200
