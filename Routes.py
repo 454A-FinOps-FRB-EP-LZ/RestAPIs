@@ -77,4 +77,4 @@ def stress_memory():
 
 # Running the API
 
-api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 1313)))
+api.run(host="0.0.0.0", port=int(os.environ.get("PORT", 80)))
