@@ -69,8 +69,8 @@ def stress_memory():
     memory_load_percentage = random.choice([5, 10, 15, 20])
     try:
         memory_allocate(memory_load_percentage)
-        timer = threading.Timer(3.0, memory_free)
-        timer.start()
+        time.sleep(3)
+        memory_free()
     except MemoryError:
         return jsonify({'status': 'Memory limit reached'}), 200
     return jsonify({'status': f'Memory stress test started at {memory_load_percentage}% load'}), 200
